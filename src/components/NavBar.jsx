@@ -8,6 +8,10 @@ import Movies from "./Movies";
 
 import { NavDropdown } from "react-bootstrap";
 
+import ImgAsc from "../assets/text-sort-ascending.svg";
+import ImgDsc from "../assets/text-sort-descending.svg";
+
+
 export const Container = React.createContext();
 
 const genre = ["Action", "Adventure", "Comedy", "Drama", "Horror"];
@@ -16,6 +20,7 @@ function Navbar() {
   const [toggle, setToggle] = useState(true);
   const [moviesData, setMoviesData] = useState([]);
   const [genresData, setGenresData] = useState([]);
+  const [isDesc, setisDesc] = useState(false);
 
   const Api = "https://api.themoviedb.org/3";
 
@@ -25,7 +30,7 @@ function Navbar() {
         api_key: "ba8f4caa4e6ebec49f8c6b8ba603ed04",
         query: search,
       },
-      
+
     });
     const results = data.data.results;
     setMoviesData(results);
@@ -35,7 +40,7 @@ function Navbar() {
       params: {
         api_key: "ba8f4caa4e6ebec49f8c6b8ba603ed04",
       },
-      
+
     });
     const results = data.data.genres;
     setGenresData(results);
@@ -50,6 +55,27 @@ function Navbar() {
     const results = data.data.results;
     setMoviesData(results);
   };
+
+  const sortAscending = () => {
+    let newValue = [...moviesData];
+    let sortAsc = newValue.sort((a, b) => a.title.localeCompare(b.title));
+    setMoviesData(sortAsc)
+  }
+
+  const sortDescending = () => {
+    let newValue = [...moviesData];
+    const sortDsc = newValue.sort((a, b) => b.title.localeCompare(a.title));
+    setMoviesData(sortDsc)
+  }
+
+  const handleSort = () => {
+    if (isDesc) {
+      sortDescending();
+    } else {
+      sortAscending();
+    }
+    setisDesc(!isDesc)
+  }
 
   useEffect(() => {
     MovieCall();
@@ -71,11 +97,12 @@ function Navbar() {
               menuVariant="dark"
             >
               {genresData.map((item) => (
-                <div onClick={() => SearchMovies(item.name)}>
-                    <NavDropdown.Item>{item.name}</NavDropdown.Item>
+                <div key={item} onClick={() => SearchMovies(item.name)}>
+                  <NavDropdown.Item>{item.name}</NavDropdown.Item>
                 </div>
               ))}
             </NavDropdown>
+            <span style={{ marginLeft: "-5px" }} onClick={handleSort}>{isDesc ? <img src={ImgDsc} className="color-white" /> : <img src={ImgAsc} className="color-white" />}</span>
           </div>
           <div className="input-grouped">
             <input
