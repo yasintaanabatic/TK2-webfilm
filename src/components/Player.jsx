@@ -26,18 +26,7 @@ function Player({ children, media_type, id, movie_data }) {
   }
 
   function beforeSetVideo(data) {
-    if(data.results.length>0){
-        var youtube = data.results.filter(function (str) { return str.site.includes('YouTube'); });
-        var trailer = youtube.results.filter(function (str) { return str.type.includes('Trailer'); });
-        var teaser = youtube.results.filter(function (str) { return str.type.includes('Teaser'); });
-        if(trailer.length>0){
-            setVideo(trailer.results[0]?.key);
-        }else if(teaser.length>0){
-            setVideo(teaser.results[0]?.key);
-        }else{
-            setVideo(data.results[0]?.key);
-        }
-    }
+    setVideo(data.results[0]?.key);
   }
 
   function closeModal() {
